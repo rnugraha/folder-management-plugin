@@ -1,17 +1,11 @@
-package fm
-import java.net.UnknownHostException;
+package org.transmartproject.browse.fm
 
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import com.mongodb.DB;
-import com.mongodb.Mongo;
+import com.mongodb.DB
 import com.mongodb.MongoClient
 import com.mongodb.gridfs.GridFS;
-import com.mongodb.gridfs.GridFSInputFile;
-
-import fm.FmData;
-import fm.FmFile;
-import fm.FmFolder;
+import com.mongodb.gridfs.GridFSInputFile
 import grails.util.Holders
 import org.transmart.mongo.MongoUtils;
 import groovyx.net.http.HTTPBuilder;
@@ -20,8 +14,6 @@ import groovyx.net.http.Method;
 import org.apache.http.entity.mime.MultipartEntity
 import org.apache.http.entity.mime.HttpMultipartMode
 import org.apache.http.entity.mime.content.InputStreamBody
-
-import groovyx.net.http.*
 
 class UploadFilesService {
 

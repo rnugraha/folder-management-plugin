@@ -1,4 +1,4 @@
-package fm
+package org.transmartproject.browse.fm
 
 import annotation.*
 import com.recomdata.util.FolderType
@@ -6,10 +6,6 @@ import org.transmart.mongo.MongoUtils
 
 import grails.util.Holders
 import grails.validation.ValidationException
-
-import org.apache.commons.io.FileUtils
-import org.apache.commons.io.FilenameUtils
-import org.apache.solr.util.SimplePostTool
 import org.transmart.biomart.BioData
 import org.transmart.biomart.Experiment
 import org.transmart.searchapp.AccessLog
@@ -20,13 +16,9 @@ import org.apache.commons.io.FilenameUtils
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.InputStreamBody
-import org.apache.solr.util.SimplePostTool
-
 import groovyx.net.http.ContentType;
 import groovyx.net.http.HTTPBuilder;
-import groovyx.net.http.Method;
-
-import com.mongodb.Mongo
+import groovyx.net.http.Method
 import com.mongodb.DB
 import com.mongodb.MongoClient;
 import com.mongodb.gridfs.GridFS;
@@ -47,6 +39,7 @@ class FmFolderService {
     def amTagItemService
     def springSecurityService
     def i2b2HelperService
+    def facetsIndexingService
 
     private String getSolrUrl() {
         solrBaseUrl + '/update'
@@ -324,49 +317,12 @@ class FmFolderService {
     private void indexFile(FmFile fmFile) {
 
         try {
+            facetsIndexingService.indexByIds([this.getClass()
+                    .classLoader.loadClass('org.transmartproject.search.indexing.FacetsDocId')
+                    .newInstance('FILE', fmFile.id)] as Set)
 
-            /*
-             * Create the file entry first - the POST will handle the content.
-             */
-            String xmlString = "<add><doc><field name='id'>" + fmFile.getUniqueId() + "</field><field name='folder'>" + fmFile.folder.getUniqueId() + "</field><field name='name'>" + fmFile.originalName + "</field></doc></add>"
-            xmlString = URLEncoder.encode(xmlString, "UTF-8");
-            StringBuilder url = new StringBuilder(solrUrl);
-            url.append("?stream.body=").append(xmlString).append("&commit=true")
-            URL updateUrl = new URL(url.toString())
-            HttpURLConnection urlc = (HttpURLConnection) updateUrl.openConnection();
-            if (HttpURLConnection.HTTP_OK != urlc.getResponseCode()) {
-                log.warn("The SOLR service returned an error #" + urlc.getResponseCode() + " " + urlc.getResponseMessage() + " for url " + updateUrl);
-            } else {
-                log.debug("Pre-created record for " + fmFile.getUniqueId());
-            }
-
-            /*
-             * POST the file - if it has readable content, the contents will be indexed.
-             */
-            def useMongo=config.transmartproject.mongoFiles.enableMongo
-            url = new StringBuilder(solrUrl);
-            if(useMongo) url.append("/extract")
-            // Use the file's unique ID as the document ID in SOLR
-            url.append("?").append("literal.id=").append(URLEncoder.encode(fmFile.getUniqueId(), "UTF-8"));
-
-            // Use the file's parent folder's unique ID as the folder_uid in SOLR
-            if (fmFile.folder != null) {
-                url.append("&").append("literal.folder=").append(URLEncoder.encode(fmFile.folder.getUniqueId(), "UTF-8"));
-            }
-
-            // Use the file's name as document name is SOLR
-            url.append("&").append("literal.name=").append(URLEncoder.encode(fmFile.originalName, "UTF-8"));
-
-            if(!useMongo){
-                // Get path to actual file in filestore.
-                String[] args = [filestoreDirectory + File.separator + fmFile.filestoreLocation + File.separator + fmFile.filestoreName] as String[];
-
-                // Use SOLR SimplePostTool to manage call to SOLR service.
-                SimplePostTool postTool = new SimplePostTool(SimplePostTool.DATA_MODE_FILES, new URL(url.toString()), true,
-                        null, 0, 0, fileTypes, System.out, true, true, args);
-
-                postTool.execute();
-            }else{
+            def useMongo = config.transmartproject.mongoFiles.enableMongo
+            if (useMongo) {
                 if(config.transmartproject.mongoFiles.useDriver){
                     MongoClient mongo = new MongoClient(config.transmartproject.mongoFiles.dbServer, config.transmartproject.mongoFiles.dbPort)
                     DB db = mongo.getDB(config.transmartproject.mongoFiles.dbName)

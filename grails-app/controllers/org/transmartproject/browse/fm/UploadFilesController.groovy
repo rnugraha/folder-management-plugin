@@ -1,8 +1,5 @@
-package fm
+package org.transmartproject.browse.fm
 
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-
-import fm.FmFolder
 import grails.converters.JSON;
 
 class UploadFilesController {

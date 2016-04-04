@@ -1,4 +1,4 @@
-package fm
+package org.transmartproject.browse.fm
 
 import annotation.AmTagAssociation
 import annotation.AmTagTemplate
@@ -8,16 +8,11 @@ import org.transmart.biomart.BioData
 import org.transmart.biomart.ConceptCode
 import org.transmart.biomart.Experiment
 import org.transmart.searchapp.SearchKeyword
-
-import fm.FmFile
-import fm.FmFolder
-import fm.FmFolderAssociation
 import org.transmart.mongo.MongoUtils;
 
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
-import com.mongodb.Mongo
 import com.mongodb.DB
 import com.mongodb.MongoClient;
 import com.mongodb.gridfs.GridFS;

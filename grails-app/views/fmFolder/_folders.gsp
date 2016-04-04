@@ -1,7 +1,7 @@
 <%@ page import="com.recomdata.util.*" %>
 <%
 	def ontologyService = grailsApplication.classLoader.loadClass('transmartapp.OntologyService').newInstance()
-	def fmFolderService = grailsApplication.classLoader.loadClass('fm.FmFolderService').newInstance()
+	def fmFolderService = grailsApplication.classLoader.loadClass('org.transmartproject.browse.fm.FmFolderService').newInstance()
 %>
 
 <g:set var="ontologyService" bean="ontologyService"/>

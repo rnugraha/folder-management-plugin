@@ -1,4 +1,4 @@
-package fm
+package org.transmartproject.browse.fm
 
 import annotation.AmTagDisplayValue
 import annotation.AmTagItem
@@ -16,16 +16,11 @@ import grails.validation.ValidationException
 import groovy.xml.StreamingMarkupBuilder
 import org.apache.commons.lang.StringUtils
 import org.slf4j.LoggerFactory
-import org.transmart.biomart.*
 import org.transmart.searchapp.AuthUser
 import org.transmart.searchapp.SearchKeyword
 
 import javax.activation.MimetypesFileTypeMap
 
-import javax.activation.MimetypesFileTypeMap
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
-import com.mongodb.Mongo
 import com.mongodb.DB
 import com.mongodb.MongoClient
 import com.mongodb.gridfs.GridFS;
