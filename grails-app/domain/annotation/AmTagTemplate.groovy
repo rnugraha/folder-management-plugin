@@ -13,7 +13,7 @@ class AmTagTemplate {
     static hasMany = [amTagItems: AmTagItem]//, fmFolders: FmFolder]
 
     static mapping = {
-        table 'am_tag_template'
+        table schema: 'amapp'
         version false
         cache true
         sort "tagTemplateName"

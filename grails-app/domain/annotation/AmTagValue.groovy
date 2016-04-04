@@ -45,7 +45,7 @@ class AmTagValue {
 
 
     static mapping = {
-        table 'am_tag_value'
+        table schema: 'amapp'
         version false
         cache true
         sort "value"

@@ -9,7 +9,7 @@ class AmTagAssociation implements Serializable {
 
 
     static mapping = {
-        table 'am_tag_association'
+        table schema: 'amapp'
         version false
         cache true
         sort "tagTemplateName"
@@ -47,4 +47,3 @@ class AmTagAssociation implements Serializable {
 }
 
 
-	
